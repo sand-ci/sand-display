@@ -3,7 +3,7 @@ Application File
 """
 import flask
 import flask.logging
-from flask import Flask, Response, make_response, request, render_template
+from flask import Flask, Response, make_response, request, render_template, redirect
 import logging
 import os
 import re
@@ -23,6 +23,10 @@ if "SAND_DISPLY_CONFIG" in os.environ:
 if "LOGLEVEL" in app.config:
     app.logger.setLevel(app.config["LOGLEVEL"])
 
+# Redirect the index to the map
+@app.route('/')
+def index():
+    return redirect("/map/iframe", code=302)
 
 @app.route('/map/iframe')
 def map():
