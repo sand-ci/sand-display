@@ -15,6 +15,8 @@ class CachedData():
 
     def _CheckData(self):
         if time.time() > self._expiry:
-            with open(self._config['DATA_FILE'], "r") as fp:
-                self._data = json.load(fp)
-
+            try:
+                with open(self._config['DATA_FILE'], "r") as fp:
+                    self._data = json.load(fp)
+            except:
+                self._expiry = time.time() + 1
