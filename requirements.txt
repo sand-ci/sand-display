@@ -1,0 +1,7 @@
+# *** NOTE ***
+# You MUST keep entries in this file in sync with those in requirements-apache.txt
+
+Flask>=1.0.2,<1.1
+gunicorn>=19.9.0,<19.10
+Jinja2>=2.10.1,<2.11
+sls-client>=1.0.0,<1.1
