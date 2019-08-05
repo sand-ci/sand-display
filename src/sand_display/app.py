@@ -26,7 +26,8 @@ if "LOGLEVEL" in app.config:
 # Redirect the index to the map
 @app.route('/')
 def index():
-    return redirect("/map/iframe", code=302)
+    return render_template('display.html.j2')
+    #return redirect("/map/iframe", code=302)
 
 @app.route('/map/iframe')
 def map():
