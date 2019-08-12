@@ -45,6 +45,8 @@ def upload_psstats():
     r = redis.from_url(os.environ.get("REDIS_URL"))
     r.set("psdata", json.dumps(psdata))
 
+    return json.dumps({"results": "ok"})
+
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
