@@ -10,6 +10,7 @@ import re
 import sys
 import traceback
 import urllib.parse
+import json
 
 import sand_display.datamodel as datamodel
 import sand_display.default_config as default_config
@@ -34,6 +35,14 @@ def map():
     sources = datamodel.CachedData(app.config).GetSources()
 
     return render_template('iframe.html.j2', sources=sources.values())
+
+@app.route('/upload_psstats', methods=[ "POST" ])
+def upload_psstats():
+    # Get the JSON from the post
+    psdata = request.json
+    # Put it in the redis
+    r = redis.from_url(os.environ.get("REDIS_URL"))
+    r.set("psdata", json.dumps(psdata))
 
 
 if __name__ == '__main__':
