@@ -11,6 +11,7 @@ import sys
 import traceback
 import urllib.parse
 import json
+import redis
 
 import sand_display.datamodel as datamodel
 import sand_display.default_config as default_config
