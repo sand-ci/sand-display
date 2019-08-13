@@ -45,8 +45,14 @@ def upload_psstats():
     # Check the API_KEY
     if 'Authorization' not in request.headers:
         abort(401)
-    
-    if request.headers['Authorization'] != os.environ.get("API_KEY"):
+
+    # Get the bearer token from the Authorization header
+    # Split by the space
+    split_auth = request.headers['Authorization'].split(' ')
+    if len(split_auth) != 2:
+        abort(401)
+
+    if split_auth[1] != os.environ.get("API_KEY"):
         abort(403)
     # Get the JSON from the post
     psdata = request.json
@@ -58,7 +64,7 @@ def upload_psstats():
 
 @app.errorhandler(401)
 def custom_401(error):
-    return Response('No Bearer Token given', 401, {'WWW-Authenticate':'Bearer realm="display.sand-ci.org"'})
+    return Response('Malformed or missing Bearer Token', 401, {'WWW-Authenticate':'Bearer realm="display.sand-ci.org"'})
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
