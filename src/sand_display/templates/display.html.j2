@@ -35,6 +35,24 @@
       border-bottom-width: 0.3em;
       border-bottom-style: solid;
     }
+    .data-field {
+      float: right !important;
+    }
+    .table tr:not(:first-child) {
+      border-width: 0.1rem 0em 0em 0em;
+      border-style: solid;
+    }
+    .table thead th {
+      border-bottom: none;
+
+    }
+    thead {
+      background-color: #ccc;
+    }
+    .table th {
+      border-top: none;
+    }
+
     </style>
   </head>
   <body>
@@ -47,7 +65,7 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
           <img src="/static/images/transparent-sand-dune.png">
           <!-- <a class="navbar-brand" href="#">SAND Display</a> -->
-          <div class="d-none d-md-block">Service Analysis and Network Diagnosis</span>
+          <div class="d-none d-md-block float-right">Service Analysis and Network Diagnosis</span>
         </nav>
 
       </div>
@@ -64,14 +82,28 @@
         <div class="col-md-3">
           <div class="stats">
             <div class="card">
-              <ul class="nav flex-column">
-                <li class="nav-item">In the last 24 Hours</li>
-
-                <li class="nav-item">In the last Year</li>
-                <!-- Number of PerfSonar Instances Collected -->
-                <!-- Number of HTCondor instances collected -->
-
-              </ul>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col" colspan="2">In the last 24 Hours</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th class="data-field" scope="row">{{ '{:,}'.format(psdata['day'])  }}</th>
+                    <td>Tests per Day</td>
+                  </tr>
+                  <thead>
+                  <tr>
+                    <th scope="col" colspan="2">In the last Year</th>
+                  </tr>
+                </thead>
+                  <tr>
+                    <th class="data-field" scope="row">{{ '{:,}'.format(psdata['year']) }}</th>
+                    <td>Tests per Year</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>

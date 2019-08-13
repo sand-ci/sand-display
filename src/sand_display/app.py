@@ -28,7 +28,10 @@ if "LOGLEVEL" in app.config:
 # Redirect the index to the map
 @app.route('/')
 def index():
-    return render_template('display.html.j2')
+    # Get the data from redis
+    r = redis.from_url(os.environ.get("REDIS_URL"))
+    psdata = r.get("psdata")
+    return render_template('display.html.j2', psdata = json.loads(psdata))
     #return redirect("/map/iframe", code=302)
 
 @app.route('/map/iframe')
