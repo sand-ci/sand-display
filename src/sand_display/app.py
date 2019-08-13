@@ -3,7 +3,7 @@ Application File
 """
 import flask
 import flask.logging
-from flask import Flask, Response, make_response, request, render_template, redirect
+from flask import Flask, Response, make_response, request, render_template, redirect, abort
 import logging
 import os
 import re
@@ -42,6 +42,12 @@ def map():
 
 @app.route('/upload_psstats', methods=[ "POST" ])
 def upload_psstats():
+    # Check the API_KEY
+    if 'Authorization' not in request.headers:
+        abort(401)
+    
+    if request.headers['Authorization'] != os.environ.get("API_KEY"):
+        abort(403)
     # Get the JSON from the post
     psdata = request.json
     # Put it in the redis
@@ -50,6 +56,9 @@ def upload_psstats():
 
     return json.dumps({"results": "ok"})
 
+@app.errorhandler(401)
+def custom_401(error):
+    return Response('No Bearer Token given', 401, {'WWW-Authenticate':'Bearer realm="display.sand-ci.org"'})
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
