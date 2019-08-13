@@ -36,9 +36,9 @@ def index():
 
 @app.route('/map/iframe')
 def map():
-    sources = datamodel.CachedData(app.config).GetSources()
-
-    return render_template('iframe.html.j2', sources=sources.values())
+    r = redis.from_url(os.environ.get("REDIS_URL"))
+    pslocations = json.loads(r.get("pslocations"))
+    return render_template('iframe.html.j2', sources=pslocations.values())
 
 @app.route('/upload_psstats', methods=[ "POST" ])
 def upload_psstats():

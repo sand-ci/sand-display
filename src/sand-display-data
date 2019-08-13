@@ -7,6 +7,7 @@ import tempfile
 import urllib.parse
 
 import sls_client.query as sls_query
+import redis
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -42,20 +43,11 @@ def main():
         print("Sites for community {}\n".format(args.community))
     else:
         print("No known sites for community {}".format(args.community))
-    for site, site_info in sites.items():
-        print("Site: {}".format(site))
-        print("- Latitude: {}".format(site_info['Latitude']))
-        print("- Longitude: {}".format(site_info['Longitude']))
-        print("- Endpoints: {}".format(", ".join([i['Name'] for i in site_info['Resources']]) if site_info['Resources'] else "None"))
-        print("\n")
 
-    if args.output:
-        dirname = os.path.split(args.output)[0]
-        
-        with tempfile.NamedTemporaryFile(mode='w', dir=dirname, encoding='utf-8') as temp_handle:
-            json.dump(sites, temp_handle)
-            os.rename(temp_handle.name, args.output)
-            temp_handle._closer.delete = False
+    # Put the data into redis
+    r = redis.from_url(os.environ.get("REDIS_URL"))
+    print(r.set("pslocations", json.dumps(sites)))
+
 
 if __name__ == '__main__':
     main()
