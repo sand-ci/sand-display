@@ -39,8 +39,9 @@
       float: right !important;
     }
     .table tr:not(:first-child) {
-      border-width: 0.1rem 0em 0em 0em;
-      border-style: solid;
+      /* border-width: 0.1rem 0em 0em 0em; */
+      border-top: 1px solid #dee2e6;
+      /* border-style: solid; */
     }
     .table thead th {
       border-bottom: none;
@@ -49,7 +50,7 @@
     thead {
       background-color: #ccc;
     }
-    .table th {
+    .table th, .table td {
       border-top: none;
     }
 
@@ -85,22 +86,46 @@
               <table class="table">
                 <thead>
                   <tr>
-                    <th scope="col" colspan="2">In the last 24 Hours</th>
+                    <th scope="col" colspan="2">Tests in the last 24 Hours</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <th class="data-field" scope="row">{{ '{:,}'.format(psdata['day'])  }}</th>
-                    <td>Tests per Day</td>
+                    <th class="data-field" scope="row">{{ '{:,}'.format(psdata['latency']['day'])  }}</th>
+                    <td>Latency</td>
+                  </tr>
+                  <tr>
+                    <th class="data-field" scope="row">{{ '{:,}'.format(psdata['throughput']['day'])  }}</th>
+                    <td>Throughput</td>
+                  </tr>
+                  <tr>
+                    <th class="data-field" scope="row">{{ '{:,}'.format(psdata['traceroute']['day'])  }}</th>
+                    <td>Traceroutes</td>
+                  </tr>
+                  <tr>
+                    <th class="data-field" scope="row">{{ '{:,}'.format(psdata['total']['day'])  }}</th>
+                    <td>Total</td>
                   </tr>
                   <thead>
                   <tr>
-                    <th scope="col" colspan="2">In the last Year</th>
+                    <th scope="col" colspan="2">Tests in the last Year</th>
                   </tr>
                 </thead>
                   <tr>
-                    <th class="data-field" scope="row">{{ '{:,}'.format(psdata['year']) }}</th>
-                    <td>Tests per Year</td>
+                    <th class="data-field" scope="row">{{ '{:,}'.format(psdata['latency']['year'])  }}</th>
+                    <td>Latency</td>
+                  </tr>
+                  <tr>
+                    <th class="data-field" scope="row">{{ '{:,}'.format(psdata['throughput']['year'])  }}</th>
+                    <td>Throughput</td>
+                  </tr>
+                  <tr>
+                    <th class="data-field" scope="row">{{ '{:,}'.format(psdata['traceroute']['year'])  }}</th>
+                    <td>Traceroutes</td>
+                  </tr>
+                  <tr>
+                    <th class="data-field" scope="row">{{ '{:,}'.format(psdata['total']['year'])  }}</th>
+                    <td>Total</td>
                   </tr>
                 </tbody>
               </table>
