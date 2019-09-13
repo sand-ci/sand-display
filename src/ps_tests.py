@@ -52,8 +52,13 @@ results = {
     'packet_loss': test_index("ps_packet_loss*"),
     'retransmits': test_index("ps_retransmits*"),
     'throughput': test_index("ps_throughput*"),
-    'traceroute': test_index("ps_trace*"),
-    'total': test_index("ps_*")
+    'traceroute': test_index("ps_trace*")
+}
+
+results['total'] = {
+    'day': results['latency']['day'] + results['throughput']['day'] + results['traceroute']['day'],
+    'month': results['latency']['month'] + results['throughput']['month'] + results['traceroute']['month'],
+    'year': results['latency']['year'] + results['throughput']['year'] + results['traceroute']['year']
 }
 
 api_key = ""
