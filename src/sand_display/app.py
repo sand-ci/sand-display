@@ -12,6 +12,7 @@ import traceback
 import urllib.parse
 import json
 import redis
+import time
 
 import sand_display.datamodel as datamodel
 import sand_display.default_config as default_config
@@ -56,6 +57,10 @@ def upload_psstats():
         abort(403)
     # Get the JSON from the post
     psdata = request.json
+    
+    # Add the current update time
+    psdata['updated_at'] = time.time()
+
     # Put it in the redis
     r = redis.from_url(os.environ.get("REDIS_URL"))
     r.set("psdata", json.dumps(psdata))
