@@ -178,7 +178,7 @@
     });
 
     function updatetime() {
-      raw_time = {{ psdata['updated'] }};
+      raw_time = {{ psdata['updated_at'] }};
       date_obj = Date(raw_time*1000);
       $("#updated").text(date_obj);
     };
