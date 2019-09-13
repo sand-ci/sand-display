@@ -157,7 +157,7 @@
     <footer>
       <div class="col-md-4 offset-md-4">
         <p class="update-status">
-          Data Updated at: (Will implement)
+          Data Updated at: <span id="updated"></span>
         </p>
 
       </div>
@@ -173,7 +173,15 @@
     $(function() {
       onresize(); 
       $(window).resize(function (){ onresize(); });
+      updatetime();
+
     });
+
+    function updatetime() {
+      raw_time = {{ psdata['updated'] }};
+      date_obj = Date(raw_time*1000);
+      $("#updated").text(date_obj);
+    };
 
     function onresize() {
       var h = $(window).height() - 310;
