@@ -179,7 +179,7 @@
 
     function updatetime() {
       raw_time = {{ psdata['updated_at'] }};
-      date_obj = Date(raw_time*1000);
+      date_obj = new Date(raw_time*1000);
       $("#updated").text(date_obj.toLocaleString());
     };
 
