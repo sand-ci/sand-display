@@ -11,8 +11,8 @@ import redis
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    #parser.add_argument("-c", "--community", dest="community", default="CCSTAR")
-    parser.add_argument("-c", "--community", dest="community", default="OSG")
+    parser.add_argument("-c", "--community", dest="community", default="CCSTAR")
+    #parser.add_argument("-c", "--community", dest="community", default="OSG")
     parser.add_argument("-o", "--output-json", dest="output")
     return parser.parse_args()
 
