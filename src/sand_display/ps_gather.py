@@ -5,7 +5,7 @@ import datetime
 import os
 
 
-host = "192.170.227.31"
+host = "atlas-kibana.mwt2.org"
 
 epoch = datetime.datetime.utcfromtimestamp(0)
 
@@ -14,8 +14,8 @@ def unix_time_millis(dt):
 
 
 class PSData:
-    def __init__(self, username, password, host="192.170.227.31", index="ps_*"):
-        self.client = Elasticsearch(hosts="{}:{}@{}".format(username, password, host), timeout=60)
+    def __init__(self, username, password, host="atlas-kibana.mwt2.org", index="ps_*", port=9200):
+        self.client = Elasticsearch(hosts="https://{}:{}@{}:{}".format(username, password, host, port), timeout=60)
         self.index = index
 
 
