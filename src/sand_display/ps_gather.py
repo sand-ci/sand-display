@@ -15,7 +15,7 @@ def unix_time_millis(dt):
 
 class PSData:
     def __init__(self, username, password, host="atlas-kibana.mwt2.org", index="ps_*", port=9200):
-        self.client = Elasticsearch(hosts="https://{}:{}@{}:{}".format(username, password, host, port), timeout=60)
+        self.client = Elasticsearch(hosts="https://{}:{}@{}:{}".format(username, password, host, port), timeout=300)
         self.index = index
 
 

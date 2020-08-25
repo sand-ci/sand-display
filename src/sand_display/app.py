@@ -34,7 +34,8 @@ def index():
     # Get the data from redis
     r = redis.from_url(os.environ.get("REDIS_URL"))
     psdata = r.get("psdata")
-    if not psdata or psdata['updated_at'] < time.time() - 600:
+    psdata_loaded = json.loads(psdata)
+    if not psdata or psdata_loaded['updated_at'] < (time.time() - 600):
         # Get the data and upload to redis
         psdata = PSData.TotalResults()
         psdata['updated_at'] = time.time()
