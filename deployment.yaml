@@ -1,0 +1,68 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sand-display
+  labels:
+    name: sand-display
+spec:
+  selector:
+    matchLabels:
+      app: sand-display
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: sand-display
+    spec:
+      containers:
+      - name: sand-display
+        image: sandci/sand-display:kube
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 5000
+        env:
+          - name: REDIS_URL
+            value: redis://localhost
+          - name: ES_USER
+            valueFrom:
+              secretKeyRef:
+                name: mwt2-es-credentials
+                key: es_username.txt
+          - name: ES_PASS
+            valueFrom:
+              secretKeyRef:
+                name: mwt2-es-credentials
+                key: es_password.txt
+      - name: redis
+        image: redis
+        ports:
+        - containerPort: 6379
+          name: redis
+          protocol: TCP
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sand-display-service
+spec:
+  selector:
+    app: sand-display
+  ports:
+  - protocol: "TCP"
+    port: 8000
+    targetPort: 5000
+  type: LoadBalancer
+
+
+

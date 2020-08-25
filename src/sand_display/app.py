@@ -16,6 +16,8 @@ import time
 
 import sand_display.datamodel as datamodel
 import sand_display.default_config as default_config
+from sand_display.ps_gather import PSData
+import map_data
 
 app = Flask(__name__)
 app.config.from_object(default_config)
@@ -32,14 +34,24 @@ def index():
     # Get the data from redis
     r = redis.from_url(os.environ.get("REDIS_URL"))
     psdata = r.get("psdata")
+    if not psdata or psdata['updated_at'] < time.time() - 600:
+        # Get the data and upload to redis
+        psdata = PSData.TotalResults()
+        psdata['updated_at'] = time.time()
+        psdata = json.dumps(psdata)
+        r.set('psdata', psdata)
     return render_template('display.html.j2', psdata = json.loads(psdata))
     #return redirect("/map/iframe", code=302)
 
 @app.route('/map/iframe')
 def map():
     r = redis.from_url(os.environ.get("REDIS_URL"))
-    pslocations = json.loads(r.get("pslocations"))
-    return render_template('iframe.html.j2', sources=pslocations.values())
+    pslocations = r.get("pslocations")
+    if not pslocations:
+        pslocations = map_data.main()
+        pslocations = json.dumps(pslocations)
+        r.set("pslocations", pslocations)
+    return render_template('iframe.html.j2', sources=json.loads(pslocations).values())
 
 @app.route('/upload_psstats', methods=[ "POST" ])
 def upload_psstats():
@@ -73,7 +85,7 @@ def custom_401(error):
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
-    app.run(debug=True, use_reloader=True)
+    app.run(debug=True, use_reloader=True, host='0.0.0.0')
 else:
     root = logging.getLogger()
     root.addHandler(flask.logging.default_handler)

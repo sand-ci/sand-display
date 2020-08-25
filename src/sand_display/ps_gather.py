@@ -1,12 +1,11 @@
 from elasticsearch_dsl import Search, Q
 from elasticsearch import Elasticsearch
 import datetime
-import requests
+#import requests
+import os
 
 
 host = "192.170.227.31"
-username = "dweitzel"
-password = "6ZOiEmp6J7"
 
 epoch = datetime.datetime.utcfromtimestamp(0)
 
@@ -41,31 +40,36 @@ class PSData:
         s = s.filter('range', **{'timestamp': {'from': unix_time_millis(from_date), 'to': unix_time_millis(to_date) }})
         return s.count()
 
+    @staticmethod
+    def TotalResults():
+        def test_index(index):
+            username = os.environ.get("ES_USER")
+            password = os.environ.get("ES_PASS")
+            psdata = PSData(username, password, index=index)
+            return psdata.GetNumtests()
 
-def test_index(index):
-    psdata = PSData(username, password, index=index)
-    return psdata.GetNumtests()
 
-results = {}
-results = {
-    'latency': test_index("ps_owd*"),
-    'packet_loss': test_index("ps_packet_loss*"),
-    'retransmits': test_index("ps_retransmits*"),
-    'throughput': test_index("ps_throughput*"),
-    'traceroute': test_index("ps_trace*")
-}
+        results = {}
+        results = {
+            'latency': test_index("ps_owd*"),
+            'packet_loss': test_index("ps_packet_loss*"),
+            'retransmits': test_index("ps_retransmits*"),
+            'throughput': test_index("ps_throughput*"),
+            'traceroute': test_index("ps_trace*")
+        }
 
-results['total'] = {
-    'day': results['latency']['day'] + results['throughput']['day'] + results['traceroute']['day'],
-    'month': results['latency']['month'] + results['throughput']['month'] + results['traceroute']['month'],
-    'year': results['latency']['year'] + results['throughput']['year'] + results['traceroute']['year']
-}
+        results['total'] = {
+            'day': results['latency']['day'] + results['throughput']['day'] + results['traceroute']['day'],
+            'month': results['latency']['month'] + results['throughput']['month'] + results['traceroute']['month'],
+            'year': results['latency']['year'] + results['throughput']['year'] + results['traceroute']['year']
+        }
+        return results
 
-api_key = ""
-with open('api_key', 'r') as api_key_file:
-    api_key = api_key_file.read().strip()
+#api_key = ""
+#with open('api_key', 'r') as api_key_file:
+#    api_key = api_key_file.read().strip()
 
-headers = {'Authorization': 'Bearer {}'.format(api_key)}
-res = requests.post("https://display.sand-ci.org/upload_psstats", json=results, headers=headers)
-if res.ok:
-    print("Got ok from send")
+#headers = {'Authorization': 'Bearer {}'.format(api_key)}
+#res = requests.post("https://display.sand-ci.org/upload_psstats", json=results, headers=headers)
+#if res.ok:
+#    print("Got ok from send")

@@ -7,18 +7,9 @@ import tempfile
 import urllib.parse
 
 import sls_client.query as sls_query
-import redis
-
-def parse_args():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-c", "--community", dest="community", default="CCSTAR")
-    #parser.add_argument("-c", "--community", dest="community", default="OSG")
-    parser.add_argument("-o", "--output-json", dest="output")
-    return parser.parse_args()
 
 def main():
-    args = parse_args()
-    qs = urllib.parse.urlencode([("type", "host"), ("group-communities", args.community)])
+    qs = urllib.parse.urlencode([("type", "host"), ("group-communities", "CCSTAR")])
     response = sls_query.query(qs)
 
     sites = {}
@@ -41,13 +32,14 @@ def main():
         resources.append({"Name": record['host-name'][-1]})
 
     if sites:
-        print("Sites for community {}: {}\n".format(args.community, len(sites)))
+        print("Sites for community {}: {}\n".format("CCSTAR", len(sites)))
     else:
-        print("No known sites for community {}".format(args.community))
+        print("No known sites for community {}".format("CCSTAR"))
 
     # Put the data into redis
-    r = redis.from_url(os.environ.get("REDIS_URL"))
-    print(r.set("pslocations", json.dumps(sites)))
+    return sites
+    #r = redis.from_url(os.environ.get("REDIS_URL"))
+    #print(r.set("pslocations", json.dumps(sites)))
 
 
 if __name__ == '__main__':
