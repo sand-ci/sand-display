@@ -34,7 +34,8 @@ def index():
     # Get the data from redis
     r = redis.from_url(os.environ.get("REDIS_URL"))
     psdata = r.get("psdata")
-    psdata_loaded = json.loads(psdata)
+    if psdata:
+        psdata_loaded = json.loads(psdata)
     if not psdata or psdata_loaded['updated_at'] < (time.time() - 600):
         # Get the data and upload to redis
         psdata = PSData.TotalResults()
@@ -85,6 +86,7 @@ def custom_401(error):
     return Response('Malformed or missing Bearer Token', 401, {'WWW-Authenticate':'Bearer realm="display.sand-ci.org"'})
 
 if __name__ == '__main__':
+
     logging.basicConfig(level=logging.DEBUG)
     app.run(debug=True, use_reloader=True, host='0.0.0.0')
 else:
